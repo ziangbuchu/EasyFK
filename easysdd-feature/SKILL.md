@@ -65,7 +65,7 @@ easysdd/
 | 阶段 | 子技能 | 主导者 | 产出 |
 |---|---|---|---|
 | ⓪ brainstorm（可选） | `easysdd-feature-brainstorm` | AI 做思考伙伴，用户拍板 | brainstorm note |
-| ① 方案设计（含测试设计） | `easysdd-feature-design` | AI 起草，用户分层拍板 | 方案 doc（YAML frontmatter + 三层结构 + 不变量） |
+| ① 方案设计（含测试设计） | `easysdd-feature-design` | AI 起草，用户整体 review 拍板 | 方案 doc（YAML frontmatter + 三层结构 + 测试设计） |
 | ② 分步实现 | `easysdd-feature-implement` | AI 按方案执行 | 代码 + 阶段汇报 |
 | ③ 验收闭环 | `easysdd-feature-acceptance` | AI 逐层核对方案，用户终审 | 验收报告 + 架构归并 + 收尾提交确认 |
 

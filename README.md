@@ -36,7 +36,7 @@ BUG 修复 →  report → analyze → fix
 | 阶段 | 产出 | 说明 |
 |---|---|---|
 | ⓪ Brainstorm（可选） | `brainstorm.md` | 模糊想法磨清晰，AI 做思考伙伴 |
-| ① Design | `design.md` | 术语表 + 接口契约 + 测试设计，用户分层拍板 |
+| ① Design | `design.md` | 术语表 + 接口契约 + 测试设计，用户整体 review 拍板 |
 | ② Implement | 代码 | AI 按方案分步实现，阶段间有 checkpoint |
 | ③ Acceptance | `acceptance.md` | 逐层核对方案 + 架构归并 + 收尾确认 |
 
