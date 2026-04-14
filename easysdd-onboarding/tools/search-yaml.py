@@ -11,19 +11,19 @@ Filter syntax (--filter flag, repeatable, AND logic):
 
 Usage examples:
   # Search easysdd/learnings (compound docs)
-  python tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall
-  python tools/search-yaml.py --dir easysdd/learnings --filter tags~=prisma --filter severity=high
-  python tools/search-yaml.py --dir easysdd/learnings --filter component~=database --full
+  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall
+  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter tags~=prisma --filter severity=high
+  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter component~=database --full
 
   # Full-text search in body + frontmatter values
-  python tools/search-yaml.py --dir easysdd/learnings --query "shadow database"
+  python easysdd/tools/search-yaml.py --dir easysdd/learnings --query "shadow database"
 
   # JSON output for AI agent consumption
-  python tools/search-yaml.py --dir easysdd/learnings --filter track=knowledge --json
+  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=knowledge --json
 
   # Works on any yaml-frontmatter markdown directory
-  python tools/search-yaml.py --dir docs/decisions --filter status=accepted
-  python tools/search-yaml.py --dir content/posts --filter tags~=python --query "asyncio"
+  python easysdd/tools/search-yaml.py --dir docs/decisions --filter status=accepted
+  python easysdd/tools/search-yaml.py --dir content/posts --filter tags~=python --query "asyncio"
 """
 
 import argparse

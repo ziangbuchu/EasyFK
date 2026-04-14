@@ -190,23 +190,14 @@ graph LR
 
 ## 六、搜索工具
 
-`tools/search-yaml.py` 是通用 YAML frontmatter 搜索工具（路径见主技能 `easysdd` 第二节）。
+> 完整语法和示例见根技能 `easysdd` 第五节约束 11"工具用法速查"。本节只列 explore 特有的典型查询。
 
 ```bash
-# 全文检索 explore
-python tools/search-yaml.py --dir easysdd/explores --query "auth flow"
+# 按类型筛选
+python easysdd/tools/search-yaml.py --dir easysdd/explores --filter type=module-overview --filter status=active
 
-# 按类型
-python tools/search-yaml.py --dir easysdd/explores --filter type=module-overview
-
-# 只看当前有效探索记录
-python tools/search-yaml.py --dir easysdd/explores --filter status=active
-
-# 按关键词
-python tools/search-yaml.py --dir easysdd/explores --filter keywords~=cache
-
-# JSON 输出（给 AI 解析）
-python tools/search-yaml.py --dir easysdd/explores --query "retry" --json
+# 归档后查重叠
+python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{关键词}" --json
 ```
 
 ---
@@ -233,6 +224,8 @@ python tools/search-yaml.py --dir easysdd/explores --query "retry" --json
 ---
 
 ## 九、反模式（看到就停）
+
+> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见根技能 `easysdd` 第五节约束 10。以下为 explore 特有的反模式：
 
 - ❌ 不读代码直接给结论
 - ❌ 证据只写"看起来像"，不写文件:行号

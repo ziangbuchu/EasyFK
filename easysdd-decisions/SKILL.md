@@ -158,47 +158,18 @@ tags: []
 
 ## 六、搜索工具
 
-`tools/search-yaml.py` 是 easysdd 提供的通用 YAML frontmatter 搜索工具（路径见主技能 `easysdd` 第二节"目录安排"）。AI 在以下场景应优先使用它。
-
-**filter 语法**（可重复，AND 逻辑）：
-
-- `key=value` — 字段精确匹配（大小写不敏感）
-- `key~=value` — 字符串字段子串匹配；列表字段元素包含匹配
+> 完整语法和示例见根技能 `easysdd` 第五节约束 11"工具用法速查"。本节只列 decisions 特有的典型查询。
 
 ```bash
-# 按类型
-python tools/search-yaml.py --dir easysdd/decisions --filter category=tech-stack
+# 列出所有当前有效的决策
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter status=active
 
-# 按领域
-python tools/search-yaml.py --dir easysdd/decisions --filter area=frontend
+# 按类型 + 状态组合筛选
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter category=constraint --filter status=active
 
-# 只看当前有效的决策
-python tools/search-yaml.py --dir easysdd/decisions --filter status=active
-
-# 按 tag（元素包含匹配）
-python tools/search-yaml.py --dir easysdd/decisions --filter tags~=vite
-
-# 全文搜索
-python tools/search-yaml.py --dir easysdd/decisions --query "状态管理"
-
-# 列出所有约束类决策
-python tools/search-yaml.py --dir easysdd/decisions --filter category=constraint --filter status=active
-
-# 完整正文输出
-python tools/search-yaml.py --dir easysdd/decisions --filter category=architecture --full
-
-# JSON 输出（适合 AI 解析）
-python tools/search-yaml.py --dir easysdd/decisions --filter area=backend --json
+# 归档后查重叠
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --query "{关键词}" --json
 ```
-
-**在哪个阶段用**：
-
-| 场景 | 命令建议 |
-|---|---|
-| Phase 4 归档后查重叠 | `python tools/search-yaml.py --dir easysdd/decisions --query "{关键词}" --json` |
-| `easysdd-feature-design` 开始前 | `python tools/search-yaml.py --dir easysdd/decisions --filter status=active --filter area={相关领域}` |
-| `easysdd-issue-analyze` 根因分析前 | `python tools/search-yaml.py --dir easysdd/decisions --filter status=active --full` |
-| 新人了解项目规约 | `python tools/search-yaml.py --dir easysdd/decisions --filter status=active` |
 
 ---
 
@@ -297,6 +268,8 @@ tags: [http, fetch, api]
 ---
 
 ## 九、守护规则
+
+> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见根技能 `easysdd` 第五节约束 10。以下为本技能特有或细化规则：
 
 1. **只归档已拍板的决定**。讨论中的方案不归档；"也许我们应该用 X"不归档
 2. **status=superseded 不等于删除**。被取代的决策保留原文，加 `superseded-by` 字段，正文顶部加一行"**[已取代]** 见 {新文档 slug}"

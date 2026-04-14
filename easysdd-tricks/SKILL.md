@@ -188,50 +188,18 @@ superseded-by: {被哪条技巧取代，仅 status=superseded 时填写}
 
 ## 六、搜索工具
 
-`tools/search-yaml.py` 是 easysdd 提供的通用 YAML frontmatter 搜索工具（路径见主技能 `easysdd` 第二节"目录安排"）。AI 在以下场景应优先使用它。
-
-**filter 语法**（可重复，AND 逻辑）：
-
-- `key=value` — 字段精确匹配（大小写不敏感）
-- `key~=value` — 字符串字段子串匹配；列表字段元素包含匹配
+> 完整语法和示例见根技能 `easysdd` 第五节约束 11"工具用法速查"。本节只列 tricks 特有的典型查询。
 
 ```bash
-# 按类型
-python tools/search-yaml.py --dir easysdd/tricks --filter type=pattern
+# 按类型 + 框架筛选
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter type=library --filter framework~={库名}
 
-# 按框架（子串匹配）
-python tools/search-yaml.py --dir easysdd/tricks --filter framework~=prisma
+# 按技术栈浏览
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter language=typescript --filter status=active
 
-# 按编程语言
-python tools/search-yaml.py --dir easysdd/tricks --filter language=typescript
-
-# 只看当前有效的技巧
-python tools/search-yaml.py --dir easysdd/tricks --filter status=active
-
-# 按 tag（列表元素包含匹配）
-python tools/search-yaml.py --dir easysdd/tricks --filter tags~=transaction
-
-# 全文搜索
-python tools/search-yaml.py --dir easysdd/tricks --query "错误处理"
-
-# 列出所有 library 类技巧
-python tools/search-yaml.py --dir easysdd/tricks --filter type=library --filter status=active
-
-# 完整正文输出
-python tools/search-yaml.py --dir easysdd/tricks --filter type=pattern --full
-
-# JSON 输出（适合 AI 解析）
-python tools/search-yaml.py --dir easysdd/tricks --filter framework~=vue --json
+# 归档后查重叠
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --query "{关键词}" --json
 ```
-
-**在哪个阶段用**：
-
-| 场景 | 命令建议 |
-|---|---|
-| `easysdd-feature-design` 开始前 | `python tools/search-yaml.py --dir easysdd/tricks --filter status=active --filter tags~={相关技术}` |
-| `easysdd-issue-analyze` 开始前 | `python tools/search-yaml.py --dir easysdd/tricks --filter type=library --filter framework~={相关库} --full` |
-| Phase 5 归档后查重叠 | `python tools/search-yaml.py --dir easysdd/tricks --query "{关键词}" --json` |
-| 按技术栈快速浏览 | `python tools/search-yaml.py --dir easysdd/tricks --filter language={语言} --filter status=active` |
 
 ---
 
@@ -368,10 +336,10 @@ const result = await prisma.$transaction(async (tx) => {
 
 ## 九、守护规则
 
+> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见根技能 `easysdd` 第五节约束 10。以下为本技能特有或细化规则：
+
 1. **只归档已验证的做法**。"也许应该这样做"不归档；文档内容必须是用户或 AI 确认过有效的
 2. **必须调查代码仓**。用户没贴代码不等于不需要看——Phase 2 代码调查不可跳过。示例代码优先用项目真实代码，不凭空编写
-3. **status=superseded 不等于删除**。被更好方案取代的技巧保留原文，加 `superseded-by` 字段，正文顶部加一行"**[已取代]** 见 {新文档 slug}"
 3. **不替用户写原理**。用户说不清楚"为什么有效"的，写"原理待补充"，不要 AI 编造听起来合理的解释
 4. **示例优先于描述**。能用代码说清楚的就用代码，不要只有文字描述
 5. **不和 compound / decisions 重叠**。如果内容是"踩了什么坑"→ compound；如果内容是"我们规定必须/不能做 X"→ decisions；tricks 只存"怎么做"
-7. **可发现性是交付的一部分**。写完但没人能搜到等于没写；Phase 6 的关联推荐检查不可跳过

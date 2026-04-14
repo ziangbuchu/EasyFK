@@ -208,45 +208,18 @@ tags: [llm, prompting, workflow]
 
 ## 六、搜索工具
 
-`tools/search-yaml.py` 是 easysdd 提供的通用 YAML frontmatter 搜索工具（路径见 SKILL.md 第二节"目录安排"）。AI 在以下场景应优先使用它，而不是手动 Grep。
-
-**filter 语法**（可重复，AND 逻辑）：
-- `key=value` — 字段精确匹配（大小写不敏感）
-- `key~=value` — 字符串字段子串匹配；列表字段元素包含匹配
+> 完整语法和示例见根技能 `easysdd` 第五节约束 11"工具用法速查"。本节只列 compound 特有的典型查询。
 
 ```bash
-# 按轨道
-python tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall
+# 按轨道筛选坑点
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall --filter severity=high
 
-# 按 tag（元素包含匹配）
-python tools/search-yaml.py --dir easysdd/learnings --filter tags~=prisma
+# 按组件查相关学习点
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter component~={组件名}
 
-# 组合过滤（AND）
-python tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall --filter severity=high
-
-# 组件子串匹配
-python tools/search-yaml.py --dir easysdd/learnings --filter component~=database
-
-# 全文搜索
-python tools/search-yaml.py --dir easysdd/learnings --query "shadow database"
-
-# 完整正文输出
-python tools/search-yaml.py --dir easysdd/learnings --filter track=knowledge --full
-
-# JSON 输出（适合 AI 解析）
-python tools/search-yaml.py --dir easysdd/learnings --filter tags~=llm --json
+# 归档后查重叠
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter tags~={主要 tag} --json
 ```
-
-**在哪个阶段用**：
-
-| 场景 | 命令建议 |
-|---|---|
-| Phase 4 归档后查重叠 | `python tools/search-yaml.py --dir easysdd/learnings --filter tags~={主要 tag} --json` |
-| `easysdd-feature-design` 开始前查坑点 | `python tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall --filter component~={相关组件}` |
-| `easysdd-issue-analyze` 根因分析前查历史 | `python tools/search-yaml.py --dir easysdd/learnings --query "{关键词}" --filter track=pitfall` |
-| 列出所有 high-severity 坑点 | `python tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall --filter severity=high` |
-
-脚本无需安装额外依赖（PyYAML 可选，有则用，无则内建 fallback parser）。从项目根目录运行。
 
 ---
 
@@ -266,8 +239,6 @@ python tools/search-yaml.py --dir easysdd/learnings --filter tags~=llm --json
 
 ## 八、守护规则
 
-1. **不替用户写**。要点由用户说出，AI 整理成格式——不允许 AI 凭空捏造细节去填满模板
-2. **宁缺毋滥**。用户说"没什么"的节就留空或省略，空话比没有更糟
-3. **文档只增不删**。知识沉淀目录是累积性知识库；过时的文档加"已过时"标注，不删除
-4. **不混入 spec**。learning 文档不是 spec，不放进 `features/` 或 `issues/`；spec 文档也不放进知识沉淀目录
-5. **可发现性是交付的一部分**。写完文档但没人能找到等于没写；Phase 5 的检查不可跳过
+> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见根技能 `easysdd` 第五节约束 10。以下为本技能特有规则：
+
+1. **不混入 spec**。learning 文档不是 spec，不放进 `features/` 或 `issues/`；spec 文档也不放进知识沉淀目录

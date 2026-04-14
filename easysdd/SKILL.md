@@ -178,6 +178,64 @@ easysdd/
 
 ### （扩展位 — 未来子工作流挂在这里）
 
+### 子工作流依赖拓扑
+
+下图展示所有子工作流之间的依赖与推荐关系，维护者新增子工作流时先在这里定位它的上下游。
+
+```mermaid
+graph TD
+  subgraph feature["feature 工作流"]
+    direction LR
+    brainstorm["⓪ brainstorm\n（可选）"] --> design["① design"]
+    design --> implement["② implement"]
+    implement --> acceptance["③ acceptance"]
+  end
+
+  subgraph issue["issue 工作流"]
+    direction LR
+    report["① report"] --> analyze["② analyze"]
+    analyze --> fix["③ fix"]
+    report -.->|快速通道| fix
+  end
+
+  fastforward["fastforward"] --> implement
+
+  subgraph archival["归档类（共享阶段模式，见第五节约束 10）"]
+    compound["compound"]
+    decisions["decisions"]
+    tricks["tricks"]
+    explore["explore"]
+  end
+
+  acceptance -->|推荐| compound
+  acceptance -->|推荐| decisions
+  acceptance -->|推荐| guidedoc
+  acceptance -->|推荐| libdoc
+  fix -->|推荐| compound
+
+  design -.->|读| tricks
+  design -.->|读| explore
+  design -.->|读| decisions
+  design -.->|读| compound
+  analyze -.->|读| tricks
+  analyze -.->|读| explore
+  analyze -.->|读| compound
+  analyze -.->|读| decisions
+  fix -.->|读| tricks
+  fix -.->|读| explore
+  fix -.->|读| compound
+  fix -.->|读| decisions
+
+  onboarding["onboarding"] -.->|搭骨架后| feature
+  onboarding -.->|搭骨架后| issue
+  arch_check["architecture-check"] -.->|只检查不修复| design
+
+  guidedoc["guidedoc"]
+  libdoc["libdoc"]
+```
+
+**图例**：实线箭头 = 阶段依赖（必须按序）；虚线箭头 = 推荐/读取关系（按需）；快速通道 = 跳过中间阶段。
+
 ---
 
 ## 四、路由：用户该用哪个子技能
@@ -270,7 +328,95 @@ easysdd/
 - 没有用户明确许可，不做 `git commit`
 - 优先把代码和对应 spec 文档放进同一次 commit，保证可追溯
 
-### 10. 断点恢复
+### 10. 归档类工作流共享规则
+
+以下规则适用于 `easysdd-compound`、`easysdd-decisions`、`easysdd-tricks`、`easysdd-explore` 四个归档类子工作流。各子技能里不再重复这些共享规则。
+
+- **只增不删**。归档目录是累积性知识库。过时文档改 `status`（`superseded` / `deprecated` / `outdated`），不物理删除原文
+- **宁缺毋滥**。用户说"没什么"的节就省略，空话比没有更糟。可选节不强制填充
+- **不替用户写**。要点由用户说出，AI 整理成格式。不允许 AI 凭空捏造细节去填满模板
+- **可发现性是交付的一部分**。写完文档但没人能搜到等于没写。每个归档技能的收尾阶段都必须做关联推荐检查
+- **标准归档阶段**（各技能可裁剪但不可改序）：
+  1. 识别来源/类型（和用户对话确认）
+  2. 提炼要点（一次一个问题，不给用户填表格）
+  3. 确认内容（AI 起草完整文档含 YAML frontmatter，用户一次性 review）
+  4. 归档落盘（写文件 + 用 `search-yaml.py` 搜同目录查重叠 + 报告路径）
+  5. 关联推荐（提示是否需要更新 AGENTS.md / DESIGN.md，不自作主张改文件）
+- **归档后查重叠**。落盘后搜索同目录下语义相近的已有文档（按 tags / query），如有重叠在新文档末尾"相关文档"节列出，并提示用户是否需要合并或 supersede
+
+### 11. 工具用法速查
+
+本小节是 `easysdd/tools/` 下所有脚本的**唯一完整用法参考**。子技能里只写本技能特有的 1-2 行典型查询，完整语法和示例看这里。
+
+#### search-yaml.py
+
+通用 YAML frontmatter 搜索工具。从项目根目录运行，无需安装额外依赖（PyYAML 可选，有则用，无则内建 fallback parser）。
+
+**基本语法**：
+
+```bash
+python easysdd/tools/search-yaml.py --dir {目录} [--filter key=value]... [--query "全文关键词"] [--full] [--json]
+```
+
+**filter 语法**（可重复，AND 逻辑）：
+
+- `key=value` — 字段精确匹配（大小写不敏感）
+- `key~=value` — 字符串字段子串匹配；列表字段元素包含匹配
+
+**常用命令**：
+
+```bash
+# 各归档目录按类型/轨道筛选
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter category=constraint --filter status=active
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter type=pattern --filter status=active
+python easysdd/tools/search-yaml.py --dir easysdd/explores --filter type=question --filter status=active
+
+# 按 tag（列表元素包含匹配）
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter tags~=prisma
+
+# 全文搜索
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --query "shadow database"
+
+# 按领域/框架/语言筛选
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter area=frontend
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter framework~=vue
+python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter language=typescript
+
+# 搜索 feature 方案 doc
+python easysdd/tools/search-yaml.py --dir easysdd/features --filter doc_type=feature-design --filter status=approved
+
+# 输出控制
+python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter status=active --full   # 完整正文
+python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter tags~=llm --json       # JSON 输出
+```
+
+**典型使用场景**：
+
+| 场景 | 命令建议 |
+|---|---|
+| feature-design 开始前查已有归档 | 分别搜 `tricks`、`explores`、`learnings`、`decisions` 目录，`--filter status=active --query "{关键词}"` |
+| issue-analyze 根因分析前查历史 | 搜 `learnings` `--filter track=pitfall`、搜 `tricks` `--filter type=library`，按相关组件/框架过滤 |
+| 归档落盘后查重叠 | 搜同目录 `--query "{关键词}" --json`，看有无语义重叠 |
+| 新人了解项目规约 | `--dir easysdd/decisions --filter status=active` |
+| 按技术栈浏览技巧 | `--dir easysdd/tricks --filter language={语言} --filter status=active` |
+
+#### validate-yaml.py
+
+YAML 语法校验工具。用于验证 frontmatter 语法和必填字段。
+
+```bash
+# 校验单个文件的 YAML 语法
+python easysdd/tools/validate-yaml.py --file {文件路径} --yaml-only
+
+# 校验必填字段
+python easysdd/tools/validate-yaml.py --file {文件路径} --require doc_type --require status
+
+# 批量校验目录下所有文件
+python easysdd/tools/validate-yaml.py --dir {目录} --require doc_type --require status
+```
+
+### 12. 断点恢复
 - AI 对话随时可能中断（token 超限、网络断开、用户换设备）。各阶段发现自己不是从零开始时，必须优先检查已有产物的完成度，从上次停下的地方继续：
   - **brainstorm**：如 `brainstorm.md` 已有部分内容，读取后问用户"上次聊到 X，要接着聊还是推翻重来？"
   - **design**：如 `design.md` 已有部分节，逐节检查完成度，补齐缺失节，不重写已完成节
@@ -279,6 +425,8 @@ easysdd/
   - **issue-analyze**：如 `analysis.md` 已存在，检查 5 节是否都有内容，缺失的补做，已有的不重写
   - **issue-fix**：如代码已改但 `fix-note.md` 不存在，直接进入验证 + 写 fix-note 环节
 - 恢复时先向用户简短汇报："检测到上次工作到 X 阶段，我从 Y 继续"
+
+> 约束 10–11 是归档类工作流和工具的共享规则。子技能如果与此处冲突，以本节为准。
 
 ---
 
@@ -323,6 +471,15 @@ easysdd/
 ### 扩展点 D:术语表(全家共享)
 
 如果以后 easysdd 自己有了一些共享术语(比如 "spec doc"、"不变量"、"对接点" 这些),在这里维护一份全家共用的术语表,子技能复用,不再各自定义。
+
+### 扩展点 E:跨工作流状态一览
+
+目前查看"项目当前有几个 feature 在进行中、几个 issue 未关闭"需要手动用 `search-yaml.py` 按 `status` 搜各目录。未来可考虑：
+
+- 在 `tools/` 下新增 `status.py` 脚本，一次性聚合 `features/`、`issues/` 下所有产物的 status 并输出概览
+- 或维护一份 `easysdd/STATUS.md` 由工作流收尾阶段自动更新
+
+需求出现时在此处展开设计，当前只登记方向。
 
 > **维护规则**:每次扩展都要同步更新本技能,不允许只在某个子技能里加东西而不在中心登记——这正是工作流要避免的"信息散落"反模式。
 
