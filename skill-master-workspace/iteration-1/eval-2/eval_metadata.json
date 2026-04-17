@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "self-optimize",
+  "prompt": "skill-master 自己的 description 我读着有点长，精简一下但别丢关键触发场景。",
+  "assertions": [
+    {"id": "read-actual-current-file", "description": "Evidence the agent read the actual current SKILL.md (references current wording correctly, does not hallucinate)"},
+    {"id": "did-not-modify-files", "description": "No files were modified — only a proposal was produced"},
+    {"id": "acknowledges-session-caveat", "description": "Acknowledges that skill changes do not take effect in the current session (content is loaded once per session)"},
+    {"id": "new-description-shorter", "description": "Proposed description is actually shorter than the original"},
+    {"id": "preserves-key-triggers", "description": "Proposed description retains the key trigger categories: creating a new skill, optimizing an existing skill, self-optimization"},
+    {"id": "explains-what-was-kept-dropped", "description": "Explicitly enumerates what was retained and what was dropped, with reasoning"},
+    {"id": "proposes-before-acting", "description": "Treats this as a proposal-first operation (per §4 self-optimization guidance), not a bolt-the-barn-door-shut edit"}
+  ]
+}

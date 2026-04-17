@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "Produces a SKILL.md with valid YAML frontmatter (at least name + description)",
+      "passed": true,
+      "evidence": "SKILL.md lines 1-4: valid frontmatter with `name: commit-message` and a full description."
+    },
+    {
+      "text": "Long examples are split into reference/ (not packed into SKILL.md main body) — matches the progressive disclosure principle",
+      "passed": true,
+      "evidence": "reference/examples.md exists (240 lines); SKILL.md keeps only a handful of contrast pairs and delegates the bulk to reference."
+    },
+    {
+      "text": "Main SKILL.md is under 500 lines",
+      "passed": true,
+      "evidence": "wc -l reports 153 lines for SKILL.md."
+    },
+    {
+      "text": "Description is intent-forward and includes realistic trigger phrasing",
+      "passed": true,
+      "evidence": "Description: '写 git commit message 时触发——生成或审阅 commit 标题和正文...适用于手动提交、脚本化提交、PR 标题起草等所有需要落成 commit 的场景。'"
+    },
+    {
+      "text": "Process notes or frontmatter explicitly address disable-model-invocation — commit messages are side-effecting, worth considering manual-only invocation",
+      "passed": true,
+      "evidence": "process-notes.md '要不要 disable-model-invocation': explicitly reasons and decides no, because auto-trigger is the point and there are no external side effects."
+    },
+    {
+      "text": "Process notes address whether this content belongs in a skill vs staying in CLAUDE.md — a skill suits action playbooks, not facts/conventions",
+      "passed": true,
+      "evidence": "process-notes.md '这事该不该做成 skill' weighs repeated-trigger, clear-boundary, and content size, then addresses a CLAUDE.md-retention counterargument and refutes it."
+    },
+    {
+      "text": "Main SKILL.md has a pointer telling Claude when to consult reference/examples.md (not just a bare 'see examples')",
+      "passed": true,
+      "evidence": "SKILL.md '更多示例': '各 type 的正反例、复杂场景、难判断情况见 reference/examples.md。' — names the categories that trigger a lookup."
+    }
+  ]
+}

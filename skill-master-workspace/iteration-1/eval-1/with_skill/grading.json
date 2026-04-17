@@ -1,0 +1,34 @@
+{
+  "expectations": [
+    {
+      "text": "New description is intent-forward ('用户...时进入' / 'When X happens'), not capability-style ('Helps find...')",
+      "passed": true,
+      "evidence": "Description opens with '用户手里已经有一个\"出问题的现象\"...想找出根因并定位到具体出错代码时进入' — user-state + 时进入 framing, no 'Helps ...'"
+    },
+    {
+      "text": "New description includes concrete user trigger phrases that match realistic bug-reporting scenarios (stack trace, error log, symptom)",
+      "passed": true,
+      "evidence": "Lists five quoted 原话: '这个报错怎么回事'、'帮我看下这个 stack trace'、'XX 功能坏了 / 不对 / 报错了'、'这 bug 从哪来的'、'排查一下这个异常', plus signal tokens 报错日志/stack trace/异常表现/复现步骤."
+    },
+    {
+      "text": "New description has explicit boundary / exclusion to prevent over-triggering on any coding task",
+      "passed": true,
+      "evidence": "Explicit exclusion clause: '不用于写新代码时的顺手挑错或 code review——那些场景有别的 skill 管；只在有明确故障信号、需要定位根因时用。'"
+    },
+    {
+      "text": "Rationale explains why the old description ('Helps find bugs in code') failed to auto-trigger — diagnoses the actual root cause",
+      "passed": true,
+      "evidence": "Rationale names four root causes: 'Helps ... 是能力介绍，不是触发条件', 'bugs in code 语义极泛', '没有用户原话', '没有边界' — tying each to why Claude skips."
+    },
+    {
+      "text": "Output is primarily in Chinese (matches user's language)",
+      "passed": true,
+      "evidence": "Both new-description.md and rationale.md are written in Chinese with only inline English technical terms (stack trace, code review)."
+    },
+    {
+      "text": "New description (plus when_to_use if any) is under the 1,536-character cap",
+      "passed": true,
+      "evidence": "Recommended single-field description measures 211 characters (author self-reports ~190), well below the 1,536 cap."
+    }
+  ]
+}

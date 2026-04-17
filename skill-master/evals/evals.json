@@ -1,0 +1,33 @@
+{
+  "skill_name": "skill-master",
+  "evals": [
+    {
+      "id": 0,
+      "name": "create-new-skill",
+      "prompt": "我想要 Claude 每次写完代码之后自动给我一个中文小结——改了哪些文件、加了什么功能、有没有 breaking change。帮我做成一个 skill，装项目级就行。skill 路径就放在 .claude/skills/change-summary/ 下。",
+      "expected_output": "完整的 change-summary skill（SKILL.md 带合理的 name、description、正文工作流）。description 要意图向，能被自动触发；正文讲清楚该读什么、输出什么格式。过程中要问清楚或合理推断副作用、触发边界",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "fix-description",
+      "prompt": "我有个 skill 叫 bug-hunter，description 是 'Helps find bugs in code'，但它基本不会被自动触发，用户问我 bug 的时候都得 /bug-hunter 手动调。帮我改 description，让它该触发时触发，又不会每次写代码都误触发。skill 的能力范围是：从错误日志、stack trace、或者用户描述的异常症状里找根因并定位到具体代码行。",
+      "expected_output": "一个新的 description（中文优先、意图向、包含具体触发语原话、有边界说明防止过度触发）。应该解释改动的理由",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "self-optimize",
+      "prompt": "skill-master 自己的 description 我读着有点长，精简一下但别丢关键触发场景。",
+      "expected_output": "先读 skill-master 的当前文件（不是凭记忆），按 SKILL.md §4 的自我优化流程：先读文件、问清楚不满在哪或合理推断、提方案、确认后再改。给出精简后的 description 并说明保留/删掉了什么、为什么",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "extract-from-claudemd",
+      "prompt": "我 CLAUDE.md 里有一段 commit message 规范大概 200 行了，占了半个文件，读着累。想抽成 skill。规则摘要：格式 `type(scope): summary`，type 有 feat/fix/chore/docs/refactor/test/perf/style/build/ci，必须说清楚'为什么'不只是'改了什么'，中文项目用中文，首行 ≤72 字符，body 可选但建议带动机，breaking change 要 footer 标注，co-author 用官方格式。还有几十条 examples。抽成 skill 吧。",
+      "expected_output": "识别出这是 skill 而非 CLAUDE.md 的活（任务性 playbook）。合理的结构：SKILL.md 主工作流 + 拆 reference 存 examples（因为只是偶尔查）。description 意图向。考虑是否该 disable-model-invocation（用户提交 commit 时手动用 vs 自动推断）",
+      "files": []
+    }
+  ]
+}

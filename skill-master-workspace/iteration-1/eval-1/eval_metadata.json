@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "fix-description",
+  "prompt": "我有个 skill 叫 bug-hunter，description 是 'Helps find bugs in code'，但它基本不会被自动触发，用户问我 bug 的时候都得 /bug-hunter 手动调。帮我改 description，让它该触发时触发，又不会每次写代码都误触发。skill 的能力范围是：从错误日志、stack trace、或者用户描述的异常症状里找根因并定位到具体代码行。",
+  "assertions": [
+    {"id": "new-description-intent-forward", "description": "New description is intent-forward ('用户...时进入' / 'When X happens'), not capability-style ('Helps find...')"},
+    {"id": "new-description-has-trigger-phrases", "description": "New description includes concrete user trigger phrases that match realistic bug-reporting scenarios (stack trace, error log, symptom)"},
+    {"id": "new-description-has-boundary", "description": "New description has explicit boundary / exclusion to prevent over-triggering on any coding task"},
+    {"id": "rationale-explains-old-failure", "description": "Rationale explains why the old description ('Helps find bugs in code') failed to auto-trigger — diagnoses the actual root cause"},
+    {"id": "output-primarily-chinese", "description": "Output is primarily in Chinese (matches user's language)"},
+    {"id": "respects-1536-char-cap", "description": "New description (plus when_to_use if any) is under the 1,536-character cap"}
+  ]
+}

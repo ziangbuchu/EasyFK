@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "extract-from-claudemd",
+  "prompt": "我 CLAUDE.md 里有一段 commit message 规范大概 200 行了，占了半个文件，读着累。想抽成 skill。规则摘要：格式 type(scope): summary，type 有 feat/fix/chore/docs/refactor/test/perf/style/build/ci，必须说清楚'为什么'不只是'改了什么'，中文项目用中文，首行 ≤72 字符，body 可选但建议带动机，breaking change 要 footer 标注，co-author 用官方格式。还有几十条 examples。抽成 skill 吧。",
+  "assertions": [
+    {"id": "produces-skillmd-with-frontmatter", "description": "Produces a SKILL.md with valid YAML frontmatter (at least name + description)"},
+    {"id": "splits-examples-to-reference", "description": "Long examples are split into reference/ (not packed into SKILL.md main body) — matches the progressive disclosure principle"},
+    {"id": "skillmd-under-500-lines", "description": "Main SKILL.md is under 500 lines"},
+    {"id": "description-intent-forward", "description": "Description is intent-forward and includes realistic trigger phrasing"},
+    {"id": "addresses-disable-model-invocation", "description": "Process notes or frontmatter explicitly address disable-model-invocation — commit messages are side-effecting, worth considering manual-only invocation"},
+    {"id": "addresses-skill-vs-claudemd", "description": "Process notes address whether this content belongs in a skill vs staying in CLAUDE.md — a skill suits action playbooks, not facts/conventions"},
+    {"id": "references-skillmd-indexes-examples", "description": "Main SKILL.md has a pointer telling Claude when to consult reference/examples.md (not just a bare 'see examples')"}
+  ]
+}
