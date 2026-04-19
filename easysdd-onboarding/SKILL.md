@@ -166,7 +166,7 @@ easysdd/
 
 `easysdd/tools/` 下缺失的工具文件从本技能包的 `easysdd-onboarding/tools/` 对应补齐；已存在的文件不覆盖（用户可能已经改过）。
 
-`easysdd/reference/` 下缺失的参考文档从本技能包的 `easysdd-onboarding/reference/` 对应补齐；已存在的文件不覆盖（用户可能已经改过）。如果发现项目里的 reference 文件比技能包里的旧，提示用户一次，但不替他们覆盖——reference 是被所有子技能读的共享口径，覆盖成本高。
+`easysdd/reference/` 下缺失的参考文档从本技能包的 `easysdd-onboarding/reference/` 对应补齐；已存在的文件不覆盖（用户可能已经改过）。如果项目里已有同名文件但内容和技能包里不同，提示用户一次（"项目里这份和当前技能包不一致，需要我列出差异吗？"），但不替他们覆盖——reference 是被所有子技能读的共享口径，覆盖成本高。
 
 **步骤 5：处理不迁移的文件**
 

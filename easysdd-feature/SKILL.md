@@ -67,7 +67,7 @@ easysdd/
 
 fastforward 的 `{slug}-design.md` 跟标准流程共用同一个 feature 目录，frontmatter 也一致，只是正文压成 4 节（需求摘要 + 设计方案 + 验收标准 + 推进步骤）。验收标准在这里就要写好，不留占位——因为后面 acceptance 阶段会直接从这里抽。
 
-什么时候**别**走 fastforward：跨多个子系统、有术语撞车风险、推进步骤超过 4 步。遇到这几种情况就劝用户走标准流程，原因是范围一大，跳过 design 阶段意味着 AI 和用户在同一份方案上没对齐过，实现完很容易发现彼此理解的不是同一回事。
+什么时候**别**走 fastforward：跨多个子系统、有术语冲突风险、推进步骤超过 4 步。遇到这几种情况就劝用户走标准流程，原因是范围一大，跳过 design 阶段意味着 AI 和用户在同一份方案上没共同确认过，实现完很容易发现彼此理解的不是同一回事。
 
 ---
 
@@ -82,7 +82,7 @@ fastforward 的 `{slug}-design.md` 跟标准流程共用同一个 feature 目录
 | 用户主动说"先 brainstorm 一下" | `easysdd-feature-brainstorm` |
 | 用户说"快速模式"、"fastforward"等 | `easysdd-feature-fastforward` |
 | `{slug}-brainstorm.md` 已存在，用户说可以进设计了 | `easysdd-feature-design` |
-| `{slug}-design.md` 三层结构完整、代码还没动 | `easysdd-feature-implement` |
+| `{slug}-design.md` 已 approved、代码还没动 | `easysdd-feature-implement` |
 | fastforward `{slug}-design.md` 已确认 | `easysdd-feature-implement` |
 | 代码已写完，要做验收 | `easysdd-feature-acceptance` |
 | 不确定 `{slug}-design.md` 是否完整 | 自己读一遍，按上面对号入座 |

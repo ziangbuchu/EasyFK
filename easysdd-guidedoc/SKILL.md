@@ -28,7 +28,7 @@ guidedoc 就是从 spec 和代码出发，写成读者真正能用的指南。
 
 | 情境 | 说明 |
 |---|---|
-| feature-acceptance 结束 | 按 `easysdd/reference/shared-conventions.md` 主动推："第 2 节有接口变更 → 需要更新 dev-guide 吗？"、"第 1 节有用户可见行为变更 → 需要更新 user-guide 吗？" |
+| feature-acceptance 结束 | 按 `easysdd/reference/shared-conventions.md` 主动推：方案 doc 第 2 节（接口契约）有变更就问"需要更新 dev-guide 吗？"，方案 doc 第 1 节（用户可见行为）有变更就问"需要更新 user-guide 吗？" |
 | 用户主动触发 | "写文档"、"guidedoc"、"补一份开发者指南" |
 | onboarding 完成后 | 新仓库可触发本工作流补全基础文档骨架 |
 
@@ -167,7 +167,7 @@ A: ...
 
 1. 写入对应路径
 2. `status` 从 `draft` 改为 `current`，`last_reviewed` 填当天
-3. 更新已有文档时，旧文档 `status` 改为 `outdated`（或直接覆盖更新，看情况）
+3. 更新已有文档时：小修直接在原文件上改，`last_reviewed` 填当天；大改（结构重组、读者定位调整）先把旧文档 `status` 改为 `outdated` 留作参考，再新写一份
 
 ---
 

@@ -1,13 +1,11 @@
 ---
 name: easysdd-tricks
-description: 把"要做这类事，正确做法是这样"的可复用编程模式 / 库用法 / 技术技巧整理成处方性参考库，feature-design 和 issue-analyze 阶段按需检索复用。三种类型：pattern（设计模式、编程惯用法）、library（某个库 / 框架的用法和坑）、technique（具体操作技巧 / 命令配方）。和 compound 的区别：compound 是"这次工作回顾学到了什么"（事件锚定、回顾性），tricks 是"要做这类事这是正确做法"（问题锚定、处方性）。触发场景：用户说"记录一个技巧"、"这个用法值得记"、"tricks"、"记录库用法"，或 feature-design / issue-analyze 阶段发现值得沉淀的技巧时主动推送。
+description: 把"要做这类事，正确做法是这样"的可复用编程模式 / 库用法 / 技术技巧整理成处方性参考库，feature-design 和 issue-analyze 阶段按需检索复用。三种类型：pattern（设计模式、编程惯用法）、library（某个库 / 框架的用法和坑）、technique（具体操作技巧 / 命令配方）。触发场景：用户说"记录一个技巧"、"这个用法值得记"、"tricks"、"记录库用法"，或 feature-design / issue-analyze 阶段发现值得沉淀的技巧时主动推送。和 learning / decisions / explore 怎么区分看 `easysdd` 根技能。
 ---
 
 # easysdd-tricks
 
 easysdd-tricks 是面向问题的**处方性参考库**，回答一个问题：**要做 X，经过验证的正确做法是什么？**不需要触发事件，任何时候发现值得沉淀的模式或用法都可以直接写。
-
-本技能产出的文档在 frontmatter 里带 `doc_type: trick`，写入 `easysdd/compound/`，文件名形如 `YYYY-MM-DD-trick-{slug}.md`（日期打头、类型段固定为 `trick`）。和其他沉淀类 `doc_type` 的性质差异由 easysdd 根技能负责讲清楚，本技能不重复解释——只做自己的事。
 
 典型内容：
 

@@ -1,6 +1,6 @@
 ---
 name: easysdd-explore
-description: 对仓库做一次定向代码探索，把"提问 → 读代码 → 得结论"的过程沉淀为可检索证据，下次同类问题直接复用。三种类型：question（围绕一个具体问题查代码并给结论）、module-overview（梳理某模块结构 / 边界 / 入口 / 依赖）、spike（对多个可能方向做轻量技术探查，不做最终决策）。触发场景：用户说"先 explore 一下"、"这个仓库里 X 怎么实现"、"快速熟悉这个模块"、"把探索结果存档"。和 tricks 的区别：explore 记"看到了什么"（证据），tricks 记"推荐怎么做"（处方）。和 decisions 的区别：explore 是输入，decisions 是拍板。
+description: 对仓库做一次定向代码探索，把"提问 → 读代码 → 得结论"的过程沉淀为可检索证据，下次同类问题直接复用。三种类型：question（围绕一个具体问题查代码并给结论）、module-overview（梳理某模块结构 / 边界 / 入口 / 依赖）、spike（对多个可能方向做轻量技术探查，不做最终决策）。触发场景：用户说"先 explore 一下"、"这个仓库里 X 怎么实现"、"快速熟悉这个模块"、"把探索结果存档"。和 learning / tricks / decisions 怎么区分看 `easysdd` 根技能。
 ---
 
 # easysdd-explore
@@ -69,6 +69,8 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 
 - 用 Glob / Grep / Read **真实读代码**，不靠猜
 - 边读边积累证据；**同步思考每条证据支撑哪个结论**——不支撑任何结论的证据不记录
+- 关键证据目标 3–8 条，每条都要能标注到 `文件:行号`
+- 涉及多模块协作，或者类型是 `module-overview` / `spike` 时，准备一张 Mermaid 图，放在 Phase 3 起草的速答节里
 - 形成初步结论后主动检查：已有证据能否说服一个持怀疑态度的人？够了就停，不必继续扩大搜索范围
 
 为什么要"够了就停"？探索不是穷举，是建立到"读者能信"为止的证据链。继续扩大范围只会让文档变长而不变可信。
@@ -116,7 +118,7 @@ python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=exp
 
 ---
 
-## 容易踩的坑
+## 守护规则
 
 > 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见 `easysdd/reference/shared-conventions.md` 第 6 节。本技能特有的反模式：
 

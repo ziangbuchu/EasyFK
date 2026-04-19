@@ -29,7 +29,6 @@ easysdd/
 ├── compound/              沉淀类文档统一目录
 │   └── YYYY-MM-DD-{doc_type}-{slug}.md
 │                          doc_type ∈ {learning, trick, decision, explore}
-├── architecture/          架构中心目录（如上）
 ├── tools/                 跨工作流共享脚本（由 onboarding 从技能包释放）
 └── reference/             共享参考文档（由 onboarding 从技能包释放，即本文件所在目录）
 ```
@@ -52,8 +51,9 @@ easysdd/
 
 ### feature spec
 
-- `{slug}-design.md` / `{slug}-acceptance.md` 共用 `doc_type`、`feature`、`status`、`summary`、`tags` 这组核心字段
+- `{slug}-brainstorm.md` / `{slug}-design.md` / `{slug}-acceptance.md` 共用 `doc_type`、`feature`、`status`、`summary`、`tags` 这组核心字段
 - 子技能只补充本阶段特有字段，不重复改写这组字段的含义
+- `status` 取值各阶段不同：brainstorm = `confirmed`（落盘即确认，无 draft）；design = `draft` / `approved`；acceptance 见对应技能
 
 ### issue spec
 
