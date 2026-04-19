@@ -38,8 +38,20 @@ easysdd/
 - feature 目录：`easysdd/features/YYYY-MM-DD-{slug}/`，日期用创建当天
 - issue 目录：`easysdd/issues/YYYY-MM-DD-{slug}/`，日期用报告当天
 - 沉淀类文档：`easysdd/compound/YYYY-MM-DD-{doc_type}-{slug}.md`，日期用**归档当天**（不是问题发生当天）
-- 架构文档：`easysdd/architecture/{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `DESIGN.md`
+- 架构文档：`easysdd/architecture/{type}-{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `DESIGN.md`
 - `AGENTS.md` 在项目根目录，**不在 `easysdd/` 里**
+
+### 架构 doc 的分组规则（同类聚合）
+
+`easysdd/architecture/` 下的 doc 用文件名**第一段**（首个连字符之前）作为类型标记：`ui-chat.md` 和 `ui-events.md` 同属 `ui` 类，`api-routing.md` 自成 `api` 类。所以**所有架构 doc 命名必须遵循 `{type}-{slug}.md`**——只有一份且预计长期独占的，也要带个合理的 type 段（如 `cli-entry.md` 而非 `entry.md`），否则未来同类出现时统计不到、聚合不了。
+
+**触发条件**：某个 type 在 `easysdd/architecture/` 根目录下达到或超过 **6 份**文档时（即新加第 6 份的那一次操作），把这一类全部收进同名子目录。
+
+**收入子目录后的命名**：去掉 type 前缀。`ui-chat.md` → `ui/chat.md`、`ui-open-files-tree.md` → `ui/open-files-tree.md`。子目录里不再带 `ui-` 前缀。
+
+**只升不降**：文档因删除回到 ≤5 份也不折回平铺，避免反复改一堆引用。
+
+**触发时谁负责**：`easysdd-architecture-gen` 在 Phase 6 落盘前主动检查；命中阈值时这次操作要把"本次新加 / 改的这份 + 已有同类全部"一起搬迁，并同步改 `DESIGN.md` 里所有相关链接（搬迁本身要在 Phase 5 一并给用户 review，不偷偷做）。`easysdd-architecture-check` 不主动搬迁，但读 `architecture/` 时若发现某 type 已 ≥6 仍平铺，在报告末尾列为观察项交给用户。
 
 ### 要改目录结构
 

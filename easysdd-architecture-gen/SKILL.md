@@ -107,8 +107,12 @@ description: 为项目起草或更新 `easysdd/architecture/` 下的架构文档
 
 ### Phase 6：落盘 + 索引更新
 
-- new 模式：写入 `easysdd/architecture/{slug}.md`，frontmatter `status: current`，`last_reviewed` 填当天
+- new 模式：写入 `easysdd/architecture/{type}-{slug}.md`（命名规则见 `easysdd/reference/shared-conventions.md` 第 0 节），frontmatter `status: current`，`last_reviewed` 填当天
 - update 模式：覆盖已有文件，`last_reviewed` 更新为当天；如果结构性改动大，在文档末尾 `变更日志` 节加一条"YYYY-MM-DD：{一句话描述}"
+- **同类聚合检查**（落盘前必跑）：按 `easysdd/reference/shared-conventions.md` 的"架构 doc 的分组规则"判断本次落盘后某个 type 在 `architecture/` 根目录是否达到 ≥6 份
+  - 命中阈值：本次操作要把这一类全部搬进 `architecture/{type}/` 子目录、去掉文件名前缀，并同步改 `DESIGN.md` 里所有相关链接；搬迁清单（旧路径 → 新路径列表 + DESIGN.md 改动）必须在 Phase 5 一并给用户 review
+  - 未命中：按平铺路径落盘
+  - 已经在子目录里的同类直接就地新增 / 更新，不需要再判
 - **索引更新**：打开 `easysdd/architecture/DESIGN.md`，检查有没有对本文档的引用链接
   - new 模式下**必定**要加链接——新架构 doc 如果不进入总入口，等于写了没人会读
   - update 模式下只在 scope 或 summary 变化影响索引描述时更新
@@ -211,6 +215,7 @@ depends_on: []   # 其他 architecture doc 的 slug，可选
 - [ ] Phase 4 自查清单逐条跑过，并已汇报处理结果
 - [ ] 文档 frontmatter 完整，`doc_type: architecture`、`status`、`last_reviewed` 都填了
 - [ ] 每个结构化断言要么有 `file:line` 锚点、要么标了 `TODO: 待确认`
+- [ ] 落盘前已按"分组规则"判断同类是否 ≥6 份，命中则搬迁清单已和用户 review 过
 - [ ] new 模式：`DESIGN.md` 已加指向新文档的链接（或用户明确决定暂不加）
 - [ ] update 模式：如有结构性改动，`变更日志` 节已加一条
 - [ ] 用户明确 review 通过
@@ -244,3 +249,5 @@ depends_on: []   # 其他 architecture doc 的 slug，可选
 - new 模式落盘后忘记在 `DESIGN.md` 加索引：写了没人能发现
 - update 模式加了新内容但没有代码依据：只是"读起来更完整"，这是漂移开端
 - 顺手把代码 / 方案 doc 一起改了：越界，本技能只动架构 doc
+- 同类已经 ≥6 份还继续往根目录平铺：触发了分组规则却没搬迁，下次再加只会更乱
+- 文件名没遵循 `{type}-{slug}.md`：未来同类聚不起来，分组规则形同虚设

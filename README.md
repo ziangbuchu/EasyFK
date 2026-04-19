@@ -58,6 +58,12 @@ EasySDD 是一套 [Claude Code](https://claude.ai/code) 技能集，不需要装
 claude skills add liuzhengdongfortest/easysdd
 ```
 
+或者用 `npx`：
+
+```bash
+npx skills add https://github.com/liuzhengdongfortest/easysdd
+```
+
 在项目里初始化目录：
 
 > 对 Claude 说：「在这个项目里初始化 easysdd」
@@ -91,3 +97,9 @@ claude skills add liuzhengdongfortest/easysdd
 ## License
 
 MIT
+
+
+## 感谢
+
+
+- 部分想法来源于 [Linux Do 社区](https://linux.do/)
