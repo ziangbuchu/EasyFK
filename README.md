@@ -1,96 +1,119 @@
 # EasySDD
 
-> 让 Claude Code 不再每次重启都失忆，也不再一口气写出 800 行你读不懂的代码。
+> 厌倦了 OpenSpec 的草台、Oh-My-OpenAgent 的过度设计、SuperPowers 的散装，我从 0 写了一套简单轻巧、但**自洽闭环**的 AI 工作流。
 
-你用 Claude Code 写代码，大概经历过这几件事：给它一个需求，它刷刷写完几百行，你一看——里面起的名字跟你原来代码里的对不上，好几处顺手改了不该动的地方；修一个 bug，现象是没了，但下次遇到类似的问题又得从头查；上周好不容易让它理解的一个项目里的约定，这周新会话里它又忘了。
-
-不是 AI 不行，是你每次都给了它一个空白起点。
-
-**EasySDD 的想法**：开发里反复出现的几类事——加功能、修 bug、把踩过的坑记下来、定一个技术选型、摸一块陌生代码、接手一个新仓库——每一类都配一套固定做法，做完留一份文件。下次再碰到同类的事，AI 和你都能读到上次写的东西，不从零开始。
+**从开发到解决问题再到沉淀知识，是一个闭环；这一次的产出会变成下一次的输入，越用越顺。**
 
 ---
 
-## 为什么是"几类事"而不是一个通用流程
+## 缘由
 
-因为不同的事出问题的方式不一样：
+我一直在自己开发一套 Harness Agent（[源码](https://github.com/liuzhengdongfortest/MA)）。一开始就是 VibeCoding，我写设计、AI 写代码改 bug，挺顺利的。直到有一天 Codex 反复解决不了一个并不复杂的问题，反复在同一个地方掉链子，我意识到项目得有一套工作流来撑着才能继续推进。
 
-- 加新功能的时候，最容易**改着改着改出了范围，或者起的名字跟原来代码里的对不上**
-- 修 bug 的时候，最容易"**看着修好了，根本原因还在**"
-- 踩的坑不写下来，三周之后的你自己**还会再踩一遍**
-
-一个通用流程要么照顾不全，要么套在每件事上都嫌重。EasySDD 把这些事拆开，每类配一套子技能，各自大小合适。
-
-| 要做的事 | 子技能 | 做完留下的文件 |
-|---|---|---|
-| 加新功能 | `easysdd-feature` | `{slug}-design.md` + `{slug}-acceptance.md` |
-| 修 bug | `easysdd-issue` | `{slug}-report.md` + `{slug}-analysis.md` + `{slug}-fix-note.md` |
-| 把踩过的坑记下来 | `easysdd-learning` | `compound/YYYY-MM-DD-learning-*.md` |
-| 写"这种情况这么做"的参考 | `easysdd-tricks` | `compound/YYYY-MM-DD-trick-*.md` |
-| 定约束、记技术选型 | `easysdd-decisions` | `compound/YYYY-MM-DD-decision-*.md` |
-| 把一次代码调研存起来 | `easysdd-explore` | `compound/YYYY-MM-DD-explore-*.md` |
-| 写开发者指南 / 用户指南 | `easysdd-guidedoc` | `docs/dev/*.md`、`docs/user/*.md` |
-| 写库的 API 参考 | `easysdd-libdoc` | `docs/api/*.md` |
-| 检查设计和代码有没有对上 | `easysdd-architecture-check` | 只出检查报告，不存档 |
-| 把新仓库接入 EasySDD | `easysdd-onboarding` | `easysdd/` 骨架 |
+调研了一圈：OpenSpec 太简单，没有复利工程，生成的 spec 抽象到人根本没法读；SuperPowers 没有流程约束，不知道该用哪个；Oh-My-OpenAgent 又太重。没一个用着顺手的，所以自己写了 EasySDD。
 
 ---
 
-## 一个 feature 流程走下来是什么样
+## 三大块
 
-以"加用户登录功能"为例：
+### Feature 工作流
 
-1. 你说「做个登录功能」——AI 不会马上写代码，先进 design 阶段，产出一份 `{slug}-design.md`：里面有个术语表（讲清楚什么叫"用户"、什么叫"会话"，防着跟老代码里的叫法对不上）、接口怎么约定、以及测试里那些"代码上线以后必须永远成立"的条件
-2. 你读这份 doc，改到满意，才拍板
-3. 进 implement 阶段，AI 按 doc 一步步写——每写完一段停一下让你看，不一口气写完几百行
-4. 最后进 acceptance 阶段，对着 doc 核一遍代码真的做到了当初答应的事；然后代码和 doc 一起 commit
+很常规：`brainstorm → design → implement → acceptance`。头脑风暴、设计、实现、验收，做过 vibe coding 的人一看就懂。需求小的时候可以走 `easysdd-feature-fastforward` 跳过完整 review。
 
-最要紧的不是这套流程本身，是**那份 doc 留了下来**——下次谁要改登录模块，能直接读到当时为什么这么设计。
+### Issue 工作流
 
-需求特别小的时候可以走 `easysdd-feature-fastforward`——写一份简短方案直接进实现，不做完整的 review。
+参考了站内大佬的思路：`report → analyze → fix`。汇报 bug、分析根因、定点修复。
+
+### 辅助工作流
+
+这是 EasySDD 最值得一说的部分。
 
 ---
 
-## 装上开始用
+## EasySDD 跟其他框架不一样在哪
 
-EasySDD 是一套 [Claude Code](https://claude.ai/code) 技能集，不需要装别的工具：
+### Architecture
 
-```bash
-claude skills add liuzhengdongfortest/easysdd
-```
+整个系统的架构文档常驻在 `easysdd/architecture/`。每做完一个 feature，acceptance 阶段会自动把这次的变更合进架构文档。下次再有人（或 AI）想理解这个系统现在长什么样，有一份永远跟得上代码的入口。
 
-或者用 `npx`：
+### 术语归一
+
+说起来复杂，简单讲就是统一术语，确保人讲的、AI 理解的、AI 讲回来的、人理解的，是同一个东西。这件事用过你就知道值了。
+
+### Compound（重中之重）
+
+这是 EasySDD 的灵魂。专门设计了一组技能来沉淀复利工程——说白了就是积累知识：
+
+- `easysdd-learning`：从项目里学到了什么
+- `easysdd-tricks`：可复用的编程技巧
+- `easysdd-decisions`：项目里拍板的技术决定
+- `easysdd-explore`：一次代码探索的成果
+
+**那归档之后怎么召回？** EasySDD 只在需要它的时候召回。`easysdd-feature-design` 起草设计前会显式去搜 compound 目录，`easysdd-issue-analyze` 分析 bug 时也会显式去查找。
+
+这样整个系统就处于一种自洽状态：feature 和 issue 过程中积累的知识会反哺到下一次设计里，越往后越顺。
+
+### 工作清单（YAML checklist）
+
+design 完成以后，模型会生成一份 yaml 格式的 checklist，而不是 markdown 或 csv。实测起来 yaml 的遵从率明显更高，我也不知道为啥，但能用。
+
+### Onboarding 技能
+
+专门做了一个上船技能，帮你一键搭出 EasySDD 的项目结构。空仓库和已有零散文档的仓库都能接。
+
+### Libdoc 和 Guidedoc 技能
+
+两个我自己写文档时高频用到的：libdoc 维护库的 API 参考，guidedoc 写开发者/用户指南。自用起来相当趁手。
+
+---
+
+## 一些实际效果
+
+- **自动积累知识**：feature acceptance 阶段会自动写 learning，并更新 architecture 文档
+- **关于 Tauri 编译问题的踩坑沉淀**：上次踩过的坑，下次 design 时直接被搜到
+- **feature 和 issue 显性存档**：要往回翻"当时解决了哪些 issue"时有据可查
+
+---
+
+## 模型适配
+
+我自己在家和公司都在用。Claude 模型和 GLM 4.7 都能跑，但 Claude 可以一口气吃下一个大颗粒 feature，GLM 4.7 只能切小颗粒，每次 design 还得我把关。模型能力差距，没办法。
+
+---
+
+## 设计上的权衡
+
+> 那 worktree、code-review、子代理开发这些技能呢？
+
+这是设计取舍。小到 OpenSpec、大到 Oh-My-OpenAgent，每家都有自己的权衡。我并不想做一个大而全的框架，**够用就行**——能帮我持续推项目、让项目持续受控、让我安心，就 OK。没有复杂的 Subagent 和 hook 来污染你的 Claude 或 Codex。
+
+---
+
+## 怎么用
 
 ```bash
 npx skills add https://github.com/liuzhengdongfortest/easysdd
 ```
 
-在项目里初始化目录：
+进项目后对 Claude 说：
 
-> 对 Claude 说：「在这个项目里初始化 easysdd」
+> 「在这个项目里初始化 easysdd」
 
 然后开始第一件事：
 
-> 对 Claude 说：「我要做 X 功能，走 easysdd-feature 流程」
+> 「我要做 X 功能，走 easysdd-feature 流程」
 >
-> 或者：「这里有个 bug，走 easysdd-issue 流程」
+> 「这里有个 bug，走 easysdd-issue 流程」
 
-没说清楚用哪个子技能也行，Claude 会从根技能 `easysdd-core` 自己路由到合适的那一个。
-
----
-
-## 这套东西在赌什么
-
-**一份好方案花 20 分钟写，能省 2 小时的返工和 2 周后的一头雾水。**
-
-每套子流程都尽量短——能快速走完就快速走完，不确定的地方才停下来问你。阶段中间让你看一眼不是走形式，是因为 AI 最容易出事的地方就是一口气写完几百行代码才让你看，等你发现问题想停都停不下来了。
+不知道用哪个子技能也没关系，根技能 `easysdd-core` 会自己路由。
 
 ---
 
-## 想看得更深
+## 最后
 
-- 根技能讲解：[`easysdd-core/SKILL.md`](easysdd/SKILL.md)
-- 共享约定（目录结构、YAML frontmatter、checklist 怎么用、最后怎么 commit）：[`easysdd/reference/shared-conventions.md`](easysdd/reference/shared-conventions.md)（由 `easysdd-onboarding` 从技能包复制到项目）
-- 项目架构入口：[`easysdd/architecture/DESIGN.md`](easysdd/architecture/DESIGN.md)
+也不要全依赖 EasySDD。框架虽好不能解决所有情况。我自己只在特性复杂度足够高的时候才走完整流程——你既然约束了 AI 按流程办事，token 是会多耗一些的。一般的小 UI 调整我直接截图 vibe 就完事了。一般一个 feature 走完，Claude Code 的 Opus 大概要一个 200k 的上下文。
+
+GitHub：<https://github.com/liuzhengdongfortest/EasySDD>
 
 ---
 
@@ -98,8 +121,6 @@ npx skills add https://github.com/liuzhengdongfortest/easysdd
 
 MIT
 
-
 ## 感谢
 
-
-- 部分想法来源于 [Linux Do 社区](https://linux.do/)
+部分想法来自 [Linux Do 社区](https://linux.do/)。
